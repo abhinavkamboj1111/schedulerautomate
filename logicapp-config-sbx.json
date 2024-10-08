@@ -1,0 +1,14 @@
+{
+    "logicAppName": "MySandboxLogicApp",
+    "uri": "https://sandbox-service-url.com/v1.0/BatchProcess/BatchPaymentProcess",
+    "method": "PATCH",
+    "frequency": "Week",
+    "interval": 1,
+    "hours": [3],
+    "minutes": [45],
+    "weekDays": ["Monday"],
+    "timeZone": "UTC",
+    "sku": {
+        "name": "Consumption"
+    }
+}

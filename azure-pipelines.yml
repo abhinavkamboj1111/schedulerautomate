@@ -1,0 +1,35 @@
+parameters:
+  - name: environment
+    type: string
+    default: 'dev'
+    values:
+      - dev
+      - qa
+      - sandbox
+
+trigger:
+  branches:
+    include:
+      - main
+
+jobs:
+- job: CreateLogicApp
+  pool:
+    vmImage: 'windows-latest'
+  variables:
+    - group: 'LogicAppSecrets' 
+  steps:
+  - script: |
+      pwsh -File CreateLogicApp.ps1 -environment ${{ parameters.environment }}
+    displayName: 'Create Logic App Definition and Parameters'
+  - task: AzureResourceManagerTemplateDeployment@3
+    inputs:
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: 'MyManagedConnection'
+      subscriptionId: '72d53572-ea5b-490e-85c4-e1f50d1650af'
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: 'learn101'
+      location: 'Central India'
+      templateLocation: 'Linked artifact'
+      csmFile: '$(System.DefaultWorkingDirectory)/logicapp-template.json'
+      csmParametersFile: '$(System.DefaultWorkingDirectory)/LogicAppParameters.json'
