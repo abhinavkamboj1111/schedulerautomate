@@ -14,12 +14,12 @@ if (-Not (Test-Path $configFilePath)) {
 $config = Get-Content -Path $configFilePath | ConvertFrom-Json
 
 # Fetch the authorization token from pipeline variables
-$authorizationToken = "$(DevAuthorizationToken)"  # Default for dev
+$authorizationToken = $env:DevAuthorizationToken  # Default for dev
 
 if ($environment -eq "qa") {
-    $authorizationToken = "$(QaAuthorizationToken)"
+    $authorizationToken = $env:QaAuthorizationToken
 } elseif ($environment -eq "sandbox") {
-    $authorizationToken = "$(SandboxAuthorizationToken)"
+    $authorizationToken = $env:SandboxAuthorizationToken
 }
 
 # Generate the Logic App definition
@@ -82,7 +82,7 @@ $logicAppDefinitionJson | Out-File -FilePath "LogicAppDefinition.json"
 # Prepare parameters for ARM deployment
 $logicAppParams = @{
     logicAppName = $config.logicAppName  # Use the name from the config
-    location = "Central India"           
+    location = "YourLocation"             # Replace with Azure location
     sku = $config.sku.name
     definition = $logicAppDefinitionJson
 }
